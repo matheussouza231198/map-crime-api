@@ -1,7 +1,36 @@
-import { Elysia } from "elysia";
+import { Elysia } from 'elysia';
+import { cors } from '@elysiajs/cors';
+import { openapi } from '@elysiajs/openapi';
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+import { env } from '@/env';
+import { betterAuthPlugin, OpenAPI } from './http/plugins/better-auth';
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+import { createReportRoute } from './http/routes/create-report';
+import z from 'zod';
+import { listReports } from './http/routes/list-reports';
+import { getReportByCode } from './http/routes/get-report-by-code';
+import { createUserRoute } from './http/routes/create-user';
+import { listUsersRoute } from './http/routes/list-users';
+
+const app = new Elysia()
+  .use(
+    openapi({
+      documentation: {
+        components: await OpenAPI.components,
+        paths: await OpenAPI.getPaths(),
+      },
+      mapJsonSchema: {
+        zod: z.toJSONSchema,
+      },
+    }),
+  )
+  .use(cors())
+  .use(betterAuthPlugin)
+  .use(createReportRoute)
+  .use(getReportByCode)
+  .use(createUserRoute)
+  .use(listUsersRoute)
+  .use(listReports)
+  .listen(env.PORT);
+
+console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
