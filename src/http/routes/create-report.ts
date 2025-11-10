@@ -34,27 +34,11 @@ const createReportBodySchema = z.object({
     .describe('File(s) to be attached to the report'),
 });
 
-async function getNewCode() {
-  const lastReport = await db.query.reports.findFirst({
-    orderBy: (reports, { desc }) => desc(reports.id),
-  });
-
-  let suffixCode = '1'.padStart(6, '0');
-
-  if (lastReport) {
-    const [, lastCode] = lastReport.code.split('-');
-
-    suffixCode = (+lastCode + 1).toString().padStart(6, '0');
-  }
-
-  return `RPT-${suffixCode}`;
-}
-
 async function uploadFile(file: File) {
   const ext = file.name.split('.').pop();
   const filename = `${randomUUIDv7()}.${ext}`;
 
-  const { pathname } = Bun.pathToFileURL(`uploads/${filename}`);
+  const { pathname } = Bun.pathToFileURL(`public/uploads/${filename}`);
 
   await Bun.write(pathname, file);
 
@@ -62,7 +46,7 @@ async function uploadFile(file: File) {
     name: file.name,
     size: file.size,
     type: file.type,
-    url: `http://localhost:3333/uploads/${filename}`,
+    url: `http://localhost:3333/static/uploads/${filename}`,
   };
 }
 
@@ -70,8 +54,6 @@ export const createReportRoute = new Elysia().post(
   '/reports',
   async ({ status, body }) => {
     const { title, description, address, latitude, longitude, attachments } = body;
-
-    const code = await getNewCode();
 
     let uploadedFiles: Array<{
       name: string;
@@ -95,7 +77,6 @@ export const createReportRoute = new Elysia().post(
     const [report] = await db
       .insert(schema.reports)
       .values({
-        code,
         title,
         description,
         address,
@@ -113,7 +94,7 @@ export const createReportRoute = new Elysia().post(
     });
 
     return status(201, {
-      code,
+      code: report.code,
     });
   },
   {

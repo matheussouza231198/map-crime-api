@@ -1,6 +1,6 @@
 import { db } from '@/database/client';
 import { schema } from '@/database/schema';
-import { eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import Elysia from 'elysia';
 import { z } from 'zod/v4';
 
@@ -9,7 +9,7 @@ const createReportParamsSchema = z.object({
 });
 
 export const getReportByCode = new Elysia().get(
-  '/reports/:code/track',
+  '/reports/track/:code',
   async ({ status, params }) => {
     const report = await db.query.reports.findFirst({
       columns: {
@@ -17,12 +17,23 @@ export const getReportByCode = new Elysia().get(
         assignedToId: false,
       },
       with: {
+        assignedTo: {
+          columns: {
+            entity: true,
+          },
+        },
         timeline: {
           columns: {
             id: false,
+            reportId: false,
+            userId: false,
           },
-          extras: {
-            loweredStatus: sql`lower(${schema.reports.status})`.as('lowered_status'),
+          with: {
+            createdBy: {
+              columns: {
+                entity: true,
+              },
+            },
           },
         },
       },
@@ -34,10 +45,7 @@ export const getReportByCode = new Elysia().get(
     }
 
     return {
-      report: {
-        ...report,
-        // timeline,
-      },
+      report,
     };
   },
   {

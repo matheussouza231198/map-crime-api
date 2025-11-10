@@ -28,3 +28,21 @@
 - [ ] Deve ser enviado um email ao operador quando uma denuncia for atribuída a ele.
 
 ## RNFs (Requisitos não-funcionais)
+
+## Seed de desenvolvimento
+
+Para popular o banco com um usuário admin padrão e vários reports de exemplo, execute:
+
+```bash
+# ajustáveis via variáveis de ambiente (opcionais):
+# ADMIN_EMAIL, ADMIN_NAME, ADMIN_PASSWORD, ADMIN_ENTITY, SEED_REPORTS
+bun --env-file .env run src/database/seed.ts
+```
+
+Ou usando o script npm definido no package.json:
+
+```bash
+bun run db:seed
+```
+
+Por padrão o seed cria um admin com email `admin@example.com` e senha `ChangeMe123!` e insere 50 reports.

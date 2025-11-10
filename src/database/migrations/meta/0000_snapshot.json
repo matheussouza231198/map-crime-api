@@ -1,5 +1,5 @@
 {
-  "id": "54729817-f8d7-43b3-b0e0-3f9b5cab5947",
+  "id": "37ab6afd-87c0-43e6-85db-8e7bf3648061",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -157,6 +157,12 @@
           "notNull": true,
           "default": "'[]'::jsonb"
         },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "address": {
           "name": "address",
           "type": "text",
@@ -242,8 +248,7 @@
         },
         "action": {
           "name": "action",
-          "type": "action",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -414,6 +419,25 @@
           "primaryKey": false,
           "notNull": false
         },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity": {
+          "name": "entity",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -493,19 +517,7 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {
-    "public.action": {
-      "name": "action",
-      "schema": "public",
-      "values": [
-        "created",
-        "updated_status",
-        "assigned_to_user",
-        "closed",
-        "resolved"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "roles": {},

@@ -1,7 +1,8 @@
 import { randomUUIDv7 } from 'bun';
-import { decimal, jsonb, pgEnum, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { decimal, jsonb, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { users } from './users';
 import { relations } from 'drizzle-orm';
+import { randomUUID } from 'node:crypto';
 
 export const reports = pgTable('reports', {
   id: text('id')
@@ -11,7 +12,10 @@ export const reports = pgTable('reports', {
     onDelete: 'restrict',
     onUpdate: 'cascade',
   }),
-  code: text('code').notNull().unique(),
+  code: text('code')
+    .notNull()
+    .unique()
+    .$defaultFn(() => `RPT-${randomUUID().split('-').pop()?.toUpperCase()}`),
   status: text('status').notNull().default('pending'),
   title: text('title').notNull(),
   description: text('description').notNull(),
@@ -20,6 +24,7 @@ export const reports = pgTable('reports', {
   address: text('address').notNull(),
   latitude: decimal('latitude').notNull(),
   longitude: decimal('longitude').notNull(),
+  completedAt: timestamp('completed_at'),
   createdAt: timestamp('created_at')
     .$defaultFn(() => new Date())
     .notNull(),

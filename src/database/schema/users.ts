@@ -11,6 +11,7 @@ export const users = pgTable('users', {
   image: text('image'),
   role: text('role').notNull(),
   entity: text('entity').notNull(),
+  status: text('status').default('active').notNull(),
   createdAt: timestamp('created_at')
     .$defaultFn(() => new Date())
     .notNull(),

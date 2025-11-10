@@ -6,6 +6,7 @@ import { db } from './database/client';
 import { randomUUIDv7 } from 'bun';
 
 export const auth = betterAuth({
+  trustedOrigins: ['http://localhost:3000'],
   basePath: '/auth',
   plugins: [openAPI()],
   database: drizzleAdapter(db, {
