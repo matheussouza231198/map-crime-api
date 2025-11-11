@@ -8,13 +8,13 @@ const createUserBodySchema = z.object({
   name: z.string().nonempty(),
   email: z.email(),
   role: z.enum(['admin', 'user']).default('user'),
-  entity: z.string().nonempty(),
+  organization: z.string().nonempty(),
 });
 
 export const createUserRoute = new Elysia().post(
   '/users',
   async ({ status, body }) => {
-    const { name, email, role, entity } = body;
+    const { name, email, role, organization } = body;
 
     const result = await db
       .insert(schema.users)
@@ -22,7 +22,7 @@ export const createUserRoute = new Elysia().post(
         name,
         email,
         role,
-        entity,
+        organization,
       })
       .returning();
 

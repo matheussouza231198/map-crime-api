@@ -6,7 +6,7 @@ import z from 'zod';
 
 const bodyShema = z.object({
   name: z.string().optional(),
-  entity: z.string().optional(),
+  organization: z.string().optional(),
   password: z.string().optional(),
 });
 
@@ -17,13 +17,13 @@ const paramsSchema = z.object({
 export const updateUserRoute = new Elysia().put(
   '/users/:userId',
   async ({ params, body, status, user }) => {
-    const { name, entity, password } = body;
+    const { name, organization, password } = body;
 
     await db
       .update(schema.users)
       .set({
         name,
-        entity,
+        organization,
       })
       .where(eq(schema.users.id, params.userId));
 
@@ -43,5 +43,6 @@ export const updateUserRoute = new Elysia().put(
     admin: true,
     body: bodyShema,
     params: paramsSchema,
+    tags: ['users'],
   },
 );

@@ -5,11 +5,11 @@ import Elysia from 'elysia';
 import { z } from 'zod/v4';
 
 const createReportParamsSchema = z.object({
-  code: z.string(),
+  id: z.string(),
 });
 
-export const getReportByCode = new Elysia().get(
-  '/reports/track/:code',
+export const getReportById = new Elysia().get(
+  '/reports/:id',
   async ({ status, params }) => {
     const report = await db.query.reports.findFirst({
       columns: {
@@ -19,6 +19,8 @@ export const getReportByCode = new Elysia().get(
       with: {
         assignedTo: {
           columns: {
+            id: true,
+            name: true,
             organization: true,
           },
         },
@@ -26,33 +28,23 @@ export const getReportByCode = new Elysia().get(
           columns: {
             id: false,
             reportId: false,
-            userId: false,
           },
           with: {
             createdBy: {
               columns: {
+                name: true,
                 organization: true,
               },
             },
           },
         },
       },
-      where: eq(schema.reports.code, params.code),
+      where: eq(schema.reports.id, params.id),
     });
 
     if (!report) {
       return status(404);
     }
-
-    report.timeline = report.timeline.map((entry) => {
-      if (entry.action === 'assigned_to_user') {
-        const metadata = entry.metadata as { assignedToUser: { name?: string } };
-
-        delete metadata.assignedToUser.name;
-      }
-
-      return entry;
-    });
 
     return {
       report,

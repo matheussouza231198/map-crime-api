@@ -20,7 +20,7 @@ const createAdminIfNotExists = async () => {
       id: randomUUIDv7(),
       email: 'admin@system.com',
       role: 'admin',
-      entity: 'system',
+      organization: 'system',
       name: 'System Administrator',
     })
     .returning();

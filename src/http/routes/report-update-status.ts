@@ -5,7 +5,7 @@ import Elysia from 'elysia';
 import z from 'zod';
 
 const reportUpdateStatusRouteBodySchema = z.object({
-  status: z.enum(['pending', 'in_review', 'resolved', 'rejected']),
+  status: z.enum(['pending', 'in_progress', 'resolved', 'rejected']),
 });
 
 const reportUpdateStatusRouteParamsSchema = z.object({
@@ -13,7 +13,7 @@ const reportUpdateStatusRouteParamsSchema = z.object({
 });
 
 export const reportUpdateStatusRoute = new Elysia().patch(
-  '/reports/:reportId/update-status',
+  '/reports/:reportId/status',
   async ({ params, body, status, user }) => {
     const report = await db.query.reports.findFirst({
       where: (report, { eq }) => eq(report.id, params.reportId),
@@ -65,5 +65,6 @@ export const reportUpdateStatusRoute = new Elysia().patch(
     auth: true,
     body: reportUpdateStatusRouteBodySchema,
     params: reportUpdateStatusRouteParamsSchema,
+    tags: ['reports'],
   },
 );

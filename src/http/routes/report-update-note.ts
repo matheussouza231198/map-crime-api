@@ -44,5 +44,6 @@ export const reportUpdateNoteRoute = new Elysia().put(
     auth: true,
     body: bodySchema,
     paframs: paramsSchema,
+    tags: ['reports'],
   },
 );

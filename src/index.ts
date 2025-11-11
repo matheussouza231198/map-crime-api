@@ -13,12 +13,16 @@ import { getReportByCode } from './http/routes/get-report-by-code';
 import { createUserRoute } from './http/routes/create-user';
 import { listUsersRoute } from './http/routes/list-users';
 import { metricsRoute } from './http/routes/metrics';
+import { updateUserRoute } from './http/routes/update-user';
+import { getReportById } from './http/routes/ger-report-by-id';
+import { assignedReportToUserRoute } from './http/routes/assigned-report-to-user';
+import { reportUpdateStatusRoute } from './http/routes/report-update-status';
 
 const app = new Elysia()
   .use(
     cors({
       origin: 'http://localhost:3000',
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization'],
     }),
@@ -39,9 +43,13 @@ const app = new Elysia()
   .use(createReportRoute)
   .use(getReportByCode)
   .use(createUserRoute)
+  .use(updateUserRoute)
   .use(listUsersRoute)
   .use(listReports)
+  .use(getReportById)
   .use(metricsRoute)
+  .use(assignedReportToUserRoute)
+  .use(reportUpdateStatusRoute)
   .listen(env.PORT);
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
