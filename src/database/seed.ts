@@ -77,7 +77,7 @@ const generateRandomReports = async (count: number) => {
 
 async function main() {
   await createAdminIfNotExists();
-  await generateRandomReports(1_000);
+  await generateRandomReports(100);
 }
 
 main()

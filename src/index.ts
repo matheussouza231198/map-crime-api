@@ -18,6 +18,7 @@ import { getReportById } from './http/routes/ger-report-by-id';
 import { assignedReportToUserRoute } from './http/routes/assigned-report-to-user';
 import { reportUpdateStatusRoute } from './http/routes/report-update-status';
 import { reportsTimelineStatsRoute } from './http/routes/reports-timeline-stats';
+import { heatmapRoute } from './http/routes/heatmap';
 
 const app = new Elysia()
   .use(
@@ -52,6 +53,7 @@ const app = new Elysia()
   .use(reportsTimelineStatsRoute)
   .use(assignedReportToUserRoute)
   .use(reportUpdateStatusRoute)
+  .use(heatmapRoute)
   .listen(env.PORT);
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
