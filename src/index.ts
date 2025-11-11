@@ -17,6 +17,7 @@ import { updateUserRoute } from './http/routes/update-user';
 import { getReportById } from './http/routes/ger-report-by-id';
 import { assignedReportToUserRoute } from './http/routes/assigned-report-to-user';
 import { reportUpdateStatusRoute } from './http/routes/report-update-status';
+import { reportsTimelineStatsRoute } from './http/routes/reports-timeline-stats';
 
 const app = new Elysia()
   .use(
@@ -48,6 +49,7 @@ const app = new Elysia()
   .use(listReports)
   .use(getReportById)
   .use(metricsRoute)
+  .use(reportsTimelineStatsRoute)
   .use(assignedReportToUserRoute)
   .use(reportUpdateStatusRoute)
   .listen(env.PORT);
