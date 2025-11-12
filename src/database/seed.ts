@@ -3,6 +3,21 @@ import { schema } from '@/database/schema';
 import { randomUUIDv7 } from 'bun';
 import { addDays } from 'date-fns';
 
+const categories = [
+  'theft',
+  'assault',
+  'vandalism',
+  'drug_activity',
+  'traffic_violation',
+  'domestic_violence',
+  'burglary',
+  'robbery',
+  'homicide',
+  'cybercrime',
+  'fraud',
+  'other',
+];
+
 const createAdminIfNotExists = async () => {
   const existingAdmin = await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.email, 'admin@system.com'),
@@ -48,10 +63,12 @@ const generateRandomReports = async (count: number) => {
     const completedAt =
       status === 'resolved' ? addDays(createdAt, Math.floor(Math.random() * 60)) : null;
 
+    const categoryIndex = Math.floor(Math.random() * categories.length);
+
     const [report] = await db
       .insert(schema.reports)
       .values({
-        title: `Random Report ${i + 1}`,
+        title: categories[categoryIndex],
         description: `This is a description for random report ${i + 1}.`,
         latitude: (-3.119028 + Math.random() * 0.1).toString(),
         longitude: (-60.021731 + Math.random() * 0.1).toString(),

@@ -16,6 +16,14 @@ export const createUserRoute = new Elysia().post(
   async ({ status, body }) => {
     const { name, email, role, organization } = body;
 
+    const exists = await db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.email, email),
+    });
+
+    if (exists) {
+      return status(409, { message: 'User with this email already exists' });
+    }
+
     const result = await db
       .insert(schema.users)
       .values({

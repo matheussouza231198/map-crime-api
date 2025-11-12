@@ -25,6 +25,7 @@ export const listReports = new Elysia().get(
           user.role === 'user' ? eq(r.assignedToId, user.id) : undefined,
         );
       },
+      orderBy: (r, { desc }) => [desc(r.createdAt)],
     });
 
     console.log({ user });
